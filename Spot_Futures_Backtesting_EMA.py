@@ -214,21 +214,21 @@ class Futures_Backtester():
         else:
             plt.rcParams['figure.figsize'] = 12, 6
             plt.grid(True, alpha = 0.3)
-            plt.plot(self.results.iloc[-252:]['Close'], label = 'Price')
-            plt.plot(self.results.iloc[-252:]['EMA_S'], label = 'EMA_S')
-            plt.plot(self.results.iloc[-252:]['EMA_M'], label = 'EMA_M')
-            plt.plot(self.results.iloc[-252:]['EMA_L'], label = 'EMA_L')
-            plt.plot(self.results[-252:].loc[self.results.EMA_Signal == 1].index,
-                     self.results[-252:]['EMA_S'][self.results.EMA_Signal == 1], '^',
+            plt.plot(self.results.iloc[-352:]['Close'], label = 'Price')
+            plt.plot(self.results.iloc[-352:]['EMA_S'], label = 'EMA_S')
+            plt.plot(self.results.iloc[-352:]['EMA_M'], label = 'EMA_M')
+            plt.plot(self.results.iloc[-352:]['EMA_L'], label = 'EMA_L')
+            plt.plot(self.results[-352:].loc[self.results.EMA_Signal == 1].index,
+                     self.results[-352:]['EMA_S'][self.results.EMA_Signal == 1], '^',
                      color = 'g', markersize = 12)
-            plt.plot(self.results[-252:].loc[self.results.EMA_Signal == -1].index,
-                     self.results[-252:]['EMA_L'][self.results.EMA_Signal == -1], 'v',
+            plt.plot(self.results[-352:].loc[self.results.EMA_Signal == -1].index,
+                     self.results[-352:]['EMA_L'][self.results.EMA_Signal == -1], 'v',
                      color='r', markersize=12)
-            plt.plot(self.results[-252:].loc[self.results.EMA_Signal == 2].index,
-                     self.results[-252:]['EMA_L'][self.results.EMA_Signal == 2], 'v',
+            plt.plot(self.results[-352:].loc[self.results.EMA_Signal == 2].index,
+                     self.results[-352:]['EMA_L'][self.results.EMA_Signal == 2], 'v',
                      color='b', markersize=12)
-            plt.plot(self.results[-252:].loc[self.results.EMA_Signal == 3].index,
-                     self.results[-252:]['EMA_S'][self.results.EMA_Signal == 3], '^',
+            plt.plot(self.results[-352:].loc[self.results.EMA_Signal == 3].index,
+                     self.results[-352:]['EMA_S'][self.results.EMA_Signal == 3], '^',
                      color='b', markersize=12)
             plt.legend(loc=2)
             plt.show()
