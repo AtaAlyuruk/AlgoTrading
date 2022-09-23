@@ -10,31 +10,23 @@
 # In[ ]:
 
 
-import pandas as pd
-#from binance.client import Client
-import numpy as np
-import matplotlib.pyplot as plt
-from itertools import product
-from src.utils import skew_to_alpha, moments
-from src.sharpe_ratio_stats import estimated_sharpe_ratio, ann_estimated_sharpe_ratio, estimated_sharpe_ratio_stdev, probabilistic_sharpe_ratio
-import scipy.stats as sps
 import warnings
+from itertools import product
+
+import matplotlib.pyplot as plt
+# from binance.client import Client
+import numpy as np
+import pandas as pd
+import scipy.stats as sps
+
+from src.sharpe_ratio_stats import probabilistic_sharpe_ratio
+
 warnings.filterwarnings("ignore")
 plt.style.use("seaborn")
 
-
-    
-# In[ ]:
-
-# ## Backtesting with Leverage
-
-
-# In[ ]:
-
-
 class Futures_Backtester():
-    ''' Class for the vectorized backtesting of (levered) Futures trading strategies.
-    
+    """ Class for the vectorized backtesting of (levered) Futures trading strategies.
+
     Attributes
     ============
     filepath: str
@@ -47,44 +39,44 @@ class Futures_Backtester():
         end date for data import
     tc: float
         proportional trading costs per trade
-    
-    
+
+
     Methods
     =======
     get_data:
         imports the data.
-        
+
     test_strategy:
         prepares the data and backtests the trading strategy incl. reporting (wrapper).
-        
+
     prepare_data:
         prepares the data for backtesting.
-    
+
     run_backtest:
         runs the strategy backtest.
-        
+
     plot_results:
         plots the cumulative performance of the trading strategy compared to buy-and-hold.
-        
+
     optimize_strategy:
         backtests strategy for different parameter values incl. optimization and reporting (wrapper).
-    
+
     find_best_strategy:
         finds the optimal strategy (global maximum).
-        
+
     add_sessions:
         adds/labels trading sessions and their compound returns.
-        
+
     add_leverage:
         adds leverage to the strategy.
-        
+
     print_performance:
         calculates and prints various performance metrics.
-        
-    '''    
-    
+
+    """
+
     def __init__(self, filepath, symbol, start, end, tc):
-        
+
         self.filepath = filepath
         self.symbol = symbol
         self.start = start
@@ -93,13 +85,13 @@ class Futures_Backtester():
         self.results = None
         self.get_data()
         self.tp_year = (self.data.Close.count() / ((self.data.index[-1] - self.data.index[0]).days / 365.25))
-        
+
     def __repr__(self):
         return "Futures_Backtester(symbol = {}, start = {}, end = {})".format(self.symbol, self.start, self.end)
-        
+
     def get_data(self):
-        ''' Imports the data.
-        '''
+        """ Imports the data.
+        """
         raw = pd.read_csv(self.filepath, parse_dates = ["Date"], index_col = "Date")
         raw = raw.loc[self.start:self.end].copy()
         raw["returns"] = np.log(raw.Close / raw.Close.shift(1))
@@ -107,15 +99,15 @@ class Futures_Backtester():
         self.data = raw
         
     def test_strategy(self, EMAs):
-        '''
+        """
         Prepares the data and backtests the trading strategy incl. reporting (Wrapper).
-         
+
         Parameters
         ============
         EMAs: tuple (EMA_S, EMA_M, EMA_L)
             Exponential Moving Averages to be considered for the strategy.
-            
-        '''
+
+        """
         
         self.EMA_S = EMAs[0]
         self.EMA_M = EMAs[1]
@@ -133,8 +125,8 @@ class Futures_Backtester():
         self.print_performance()
     
     def prepare_data(self, EMAs):
-        ''' Prepares the Data for Backtesting.
-        '''
+        """ Prepares the Data for Backtesting.
+        """
         ########################## Strategy-Specific #############################
         
         data = self.data.copy()
@@ -192,8 +184,8 @@ class Futures_Backtester():
         self.results = data
     
     def run_backtest(self):
-        ''' Runs the strategy backtest.
-        '''
+        """ Runs the strategy backtest.
+        """
         
         data = self.results.copy()
         data["strategy"] = data["position"].shift(1) * data["returns"]
@@ -203,16 +195,19 @@ class Futures_Backtester():
         self.results = data
     
     def plot_results(self, leverage = False): #Adj!
-        '''  Plots the cumulative performance of the trading strategy compared to buy-and-hold.
-        '''
+        """  Plots the cumulative performance of the trading strategy compared to buy-and-hold.
+        """
         if self.results is None:
             print("Run test_strategy() first.")
         elif leverage: # NEW!
             title = "{} | TC = {} | Leverage = {}".format(self.symbol, self.tc, self.leverage)
             self.results[["creturns", "cstrategy", "cstrategy_levered"]].plot(title=title, figsize=(12, 8))
+            plt.show()
         else:
             title = "{} | TC = {}".format(self.symbol, self.tc)
             self.results[["creturns", "cstrategy"]].plot(title=title, figsize=(12, 8))
+            plt.show()
+
     def plot_trades(self):
         if self.results is None:
             print("Run test_strategy() first.")
@@ -223,28 +218,41 @@ class Futures_Backtester():
             plt.plot(self.results.iloc[-252:]['EMA_S'], label = 'EMA_S')
             plt.plot(self.results.iloc[-252:]['EMA_M'], label = 'EMA_M')
             plt.plot(self.results.iloc[-252:]['EMA_L'], label = 'EMA_L')
-            plt.plot(self.results.[-252:].loc[self.results.EMA_Signal == 1].index, self.results.[-252:])
+            plt.plot(self.results[-252:].loc[self.results.EMA_Signal == 1].index,
+                     self.results[-252:]['EMA_S'][self.results.EMA_Signal == 1], '^',
+                     color = 'g', markersize = 12)
+            plt.plot(self.results[-252:].loc[self.results.EMA_Signal == -1].index,
+                     self.results[-252:]['EMA_L'][self.results.EMA_Signal == -1], 'v',
+                     color='r', markersize=12)
+            plt.plot(self.results[-252:].loc[self.results.EMA_Signal == 2].index,
+                     self.results[-252:]['EMA_L'][self.results.EMA_Signal == 2], 'v',
+                     color='b', markersize=12)
+            plt.plot(self.results[-252:].loc[self.results.EMA_Signal == 3].index,
+                     self.results[-252:]['EMA_S'][self.results.EMA_Signal == 3], '^',
+                     color='b', markersize=12)
+            plt.legend(loc=2)
+            plt.show()
 
 
             
     def optimize_strategy(self, EMA_S_range, EMA_M_range, EMA_L_range, metric = "Multiple"):
-        '''
+        """
         Backtests strategy for different parameter values incl. Optimization and Reporting (Wrapper).
-         
+
         Parameters
         ============
         EMA_S_range: tuple
             tuples of the form (start, end, step size).
-        
+
         EMA_M_range: tuple
             tuples of the form (start, end, step size).
-            
+
         EMA_L_range: tuple
             tuples of the form (start, end, step size).
-        
+
         metric: str
             performance metric to be optimized (can be "Multiple" or "Sharpe")
-        '''
+        """
         
         self.metric = metric
         
@@ -271,8 +279,8 @@ class Futures_Backtester():
         
         
     def find_best_strategy(self):
-        ''' Finds the optimal strategy (global maximum).
-        '''
+        """ Finds the optimal strategy (global maximum).
+        """
         
         best = self.results_overview.nlargest(1, "performance")
         EMA_S = best.EMA_S.iloc[0]
@@ -284,14 +292,14 @@ class Futures_Backtester():
         
     
     def add_sessions(self, visualize = False):
-        ''' 
+        """
         Adds/Labels Trading Sessions and their compound returns.
-        
+
         Parameter
         ============
         visualize: bool, default False
             if True, visualize compound session returns over time
-        '''
+        """
         
         if self.results is None:
             print("Run test_strategy() first.")
@@ -304,18 +312,18 @@ class Futures_Backtester():
             data["session_compound"].plot(figsize = (12, 8))
             plt.show()  
         
-    def add_leverage(self, leverage, report = True): 
-        ''' 
+    def add_leverage(self, leverage, report = True):
+        """
         Adds Leverage to the Strategy.
-        
+
         Parameter
         ============
         leverage: float (positive)
             degree of leverage.
-        
+
         report: bool, default True
             if True, print Performance Report incl. Leverage.
-        '''
+        """
         self.add_sessions()
         self.leverage = leverage
         
@@ -337,8 +345,8 @@ class Futures_Backtester():
     ############################## Performance ######################################
     
     def print_performance(self, leverage = False): # Adj
-        ''' Calculates and prints various Performance Metrics.
-        '''
+        """ Calculates and prints various Performance Metrics.
+        """
         
         data = self.results.copy()
         
