@@ -1,7 +1,4 @@
-import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
-from itertools import product
 import warnings
 
 warnings.filterwarnings("ignore")
@@ -31,6 +28,7 @@ PLOT BACKTEST RESULTS
 
 """
 EMAeth1hr.plot_results()
+EMAeth1hr.plot_trades()
 
 # In[add leverage]:
 
