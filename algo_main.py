@@ -5,21 +5,18 @@ warnings.filterwarnings("ignore")
 plt.style.use("seaborn")
 from Spot_Futures_Backtesting_EMA import Futures_Backtester as Futures_Backtester
 
-symbol = "ETHUSDT"
-start = "2022-05-01"
-end = "2022-08-01"
-tc = -0.0005
 
 """
 # LOAD THE CLASSES
  
 """
-EMAeth1hr = Futures_Backtester(filepath="ethusdt1h.csv", symbol=symbol, start=start, end=end, tc=tc)
+ETH = Futures_Backtester(filepath="ethusdt1h.csv", symbol="ETHUSDT", start="2021-11-01", end="2022-09-01", tc=-0.0005)
+BTC = Futures_Backtester(filepath="btcusdt1h.csv", symbol="BTCUSDT", start="2021-11-01", end="2022-09-01", tc=-0.0005)
 
 # In[run backtest]:
 
-print(EMAeth1hr.test_strategy(EMAs=(5, 13, 50)))
-results = EMAeth1hr.results
+print(ETH.test_strategy(EMAs=(5, 13, 50)))
+
 
 # In[plotbacktest]:
 
@@ -27,14 +24,15 @@ results = EMAeth1hr.results
 PLOT BACKTEST RESULTS
 
 """
-EMAeth1hr.plot_results()
-EMAeth1hr.plot_trades()
+ETH.plot_results()
+ETH.plot_trades(period = 252)
 
 # In[add leverage]:
 
-EMAeth1hr.add_leverage(leverage=4)
-EMAeth1hr.plot_results(leverage=True)
+ETH.add_leverage(leverage=3)
+ETH.plot_results(leverage=True)
 
 # In[add sessions]:
 
-EMAeth1hr.add_sessions(visualize=True)
+ETH.add_sessions(visualize=True)
+ETHresults = ETH.results
