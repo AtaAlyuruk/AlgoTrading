@@ -13,7 +13,7 @@ import time
 
 class FuturesTrader():  # Triple SMA Crossover
     
-    def __init__(self, symbol, bar_length, sma_s, sma_m, sma_l, units, position = 0, leverage = 5):
+    def __init__(self, symbol, bar_length, ema_s, ema_m, ema_l, units, position = 0, leverage = 3):
         
         self.symbol = symbol
         self.bar_length = bar_length
@@ -26,9 +26,9 @@ class FuturesTrader():  # Triple SMA Crossover
         #self.trade_values = []
         
         #*****************add strategy-specific attributes here******************
-        self.SMA_S = sma_s
-        self.SMA_M = sma_m
-        self.SMA_L = sma_l
+        self.EMA_S = ema_s
+        self.EMA_M = ema_m
+        self.EMA_L = ema_l
         #************************************************************************
     
     def start_trading(self, historical_days):
@@ -90,24 +90,61 @@ class FuturesTrader():  # Triple SMA Crossover
         
     def define_strategy(self):
         
+        
+        ########################## Strategy-Specific #############################
+        
         data = self.data.copy()
+        data["EMA_S"] = data.Close.ewm(span = self.EMA_S, min_periods = self.EMA_S).mean()
+        data["EMA_M"] = data.Close.ewm(span = self.EMA_M, min_periods = self.EMA_M).mean()
+        data["EMA_L"] = data.Close.ewm(span = self.EMA_L, min_periods = self.EMA_L).mean()
         
-        #******************** define your strategy here ************************
-        data = data[["Close"]].copy()
         
-        data["SMA_S"] = data.Close.rolling(window = self.SMA_S).mean()
-        data["SMA_M"] = data.Close.rolling(window = self.SMA_M).mean()
-        data["SMA_L"] = data.Close.rolling(window = self.SMA_L).mean()
-        
-        data.dropna(inplace = True)
-                
-        cond1 = (data.SMA_S > data.SMA_M) & (data.SMA_M > data.SMA_L)
-        cond2 = (data.SMA_S < data.SMA_M) & (data.SMA_M < data.SMA_L)
-        
+        ########################## Create Signal ###############################
+        data["EMA_Signal"] = 0
+        signal = 0
+        for i in range(len(data)):
+            if (data["EMA_S"][i-1] < data["EMA_M"][i-1]) & (data["EMA_S"][i] > data["EMA_M"][i]) & (data["Close"][i] > data["EMA_L"][i]):
+                if signal != 1:
+                    signal = 1
+                    data["EMA_Signal"][i] = signal
+                else:
+                    data["EMA_Signal"][i] = 0
+            elif (data["EMA_S"][i-1] > data["EMA_M"][i-1]) & (data["EMA_S"][i] < data["EMA_M"][i]) & (data["Close"][i] < data["EMA_L"][i]):
+                if signal != -1:
+                    signal = -1
+                    data["EMA_Signal"][i] = signal
+                else:
+                    data["EMA_Signal"][i] = 0
+            elif (data["EMA_S"][i-1] > data["EMA_M"][i-1]) & (data["EMA_S"][i] < data["EMA_M"][i]) & (data["Close"][i] > data["EMA_L"][i]):
+                if signal != 2:
+                    signal = 2
+                    data["EMA_Signal"][i] = signal
+                else:
+                    data["EMA_Signal"][i] = 0
+            elif (data["EMA_S"][i-1] < data["EMA_M"][i-1]) & (data["EMA_S"][i] > data["EMA_M"][i]) & (data["Close"][i] < data["EMA_L"][i]):
+                if signal != 3:
+                    signal = 3
+                    data["EMA_Signal"][i] = signal
+                else:
+                    data["EMA_Signal"][i] = 0
+            else:
+                data["EMA_Signal"][i] = 0
+  
+        ######################### Create Position ############################
         data["position"] = 0
-        data.loc[cond1, "position"] = 1
-        data.loc[cond2, "position"] = -1
-        #***********************************************************************
+        
+        for i in range(len(data["Close"])):
+            if data["EMA_Signal"][i] == 1:
+                data["position"][i] = 1
+            elif data["EMA_Signal"][i] == -1:
+                data["position"][i] = -1
+            elif data["EMA_Signal"][i] == 2:
+                data["position"][i] = 0
+            elif data["EMA_Signal"][i] == 3:
+                data["position"][i] = 0
+            else:
+                data["position"][i] = data["position"][i-1]
+        ######################################################################
         
         self.prepared_data = data.copy()
     

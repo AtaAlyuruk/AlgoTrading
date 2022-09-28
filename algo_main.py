@@ -29,7 +29,7 @@ ETH.plot_trades(period = 252)
 
 # In[add leverage]:
 
-ETH.add_leverage(leverage=3)
+ETH.add_leverage(leverage=2)
 ETH.plot_results(leverage=True)
 
 # In[add sessions]:
