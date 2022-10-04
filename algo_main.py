@@ -11,11 +11,11 @@ from Spot_Futures_Backtesting_EMA import Futures_Backtester as Futures_Backteste
  
 """
 ETH = Futures_Backtester(filepath="ethusdt1h.csv", symbol="ETHUSDT", start="2021-11-01", end="2022-09-01", tc=-0.0005)
-BTC = Futures_Backtester(filepath="btcusdt1h.csv", symbol="BTCUSDT", start="2021-11-01", end="2022-09-01", tc=-0.0005)
+BTC = Futures_Backtester(filepath="btcusdt3oct.csv", symbol="BTCUSDT", start="2022-10-03", end="2022-10-03", tc=-0.0005)
 
 # In[run backtest]:
 
-print(ETH.test_strategy(EMAs=(5, 13, 50)))
+print(BTC.test_strategy(EMAs=(5, 13, 50)))
 
 
 # In[plotbacktest]:
@@ -24,8 +24,8 @@ print(ETH.test_strategy(EMAs=(5, 13, 50)))
 PLOT BACKTEST RESULTS
 
 """
-ETH.plot_results()
-ETH.plot_trades(period = 252)
+BTC.plot_results()
+BTC.plot_trades(period = 100)
 
 # In[add leverage]:
 

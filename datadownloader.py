@@ -21,8 +21,8 @@ plt.style.use("seaborn")
   
 # In[ ]:
     
-api_key = "dKeLRrvQJ6bvlCcFoht0XIKIr9KXhqYOrmitejCYq7Ulfii1IqzPKwtpexaVmr8x"
-secret_key = "aw7c2FRr0p1VRoSnUBRjY3zgjqtdigmFJ5l6C7X3YiUefefTtJAJnZDhAjijQkIf"
+api_key = "5FohU471stcrutn3p5GPZXtWtikeTxreNrgqdzhHsTUQA5xaOqaxgVsIboCcDuc5"
+secret_key = "btvBvWQvqHqyfO4X2RVQxQCXQWoO8NXMPdslxtX6Kwfbonqv141XzJPQrYcTjzZC"
 client = Client(api_key = api_key, api_secret = secret_key, tld = "com", testnet = False)
 
 # In[ ]:
@@ -43,8 +43,8 @@ def get_history(symbol, interval, start, end = None):
     return df
 # In[ ]:
     
-df = get_history(symbol = "ETHUSDT", interval = "1h", start = "2017-09-01", end = "2022-08-01")
-df.to_csv(r'C:\Users\ATA\Desktop\Python\BacktesterTrader\ethusdt1h.csv')
+df = get_history(symbol = "BTCUSDT", interval = "5m", start = "2022-10-03", end = "2022-10-04")
+df.to_csv(r'C:\Users\Kullanıcı\Documents\GitHub\AlgoTrading\btcusdt3oct.csv')
 
 
 
