@@ -7,11 +7,12 @@ import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 import time
+pd.options.mode.chained_assignment = None
 
 # In[2]:
 
 
-class FuturesTrader():  # Triple SMA Crossover
+class FuturesTrader():
     
     def __init__(self, symbol, bar_length, ema_s, ema_m, ema_l, units, position = 0, leverage = 3):
         
@@ -209,6 +210,9 @@ class FuturesTrader():  # Triple SMA Crossover
 api_key = "f270c6eeacf3c02e9606cd20922086be607b740606871efd1b856d4aad2ed5b7"
 secret_key = "e543e0a4a93b013298d5e88a86bac37591a58767e3236580c3c93dd8bef2af09"
 
+#5FohU471stcrutn3p5GPZXtWtikeTxreNrgqdzhHsTUQA5xaOqaxgVsIboCcDuc5
+#btvBvWQvqHqyfO4X2RVQxQCXQWoO8NXMPdslxtX6Kwfbonqv141XzJPQrYcTjzZC
+
 # Futures API document:
 
 # https://binance-docs.github.io/apidocs/futures/en/#change-log
@@ -221,19 +225,19 @@ client = Client(api_key = api_key, api_secret = secret_key, tld = "com", testnet
 
 symbol = "BTCUSDT"
 bar_length = "1m"
-sma_s = 15
-sma_m = 50
-sma_l = 200
-units = 0.001
+ema_s = 5
+ema_m = 15
+ema_l = 50
+units = 0.01
 position = 0
-leverage = 10
+leverage = 3
 
 
 # In[5]:
 
 
 trader = FuturesTrader(symbol = symbol, bar_length = bar_length,
-                       sma_s = sma_s, sma_m = sma_m, sma_l = sma_l, 
+                       ema_s = ema_s, ema_m = ema_m, ema_l = ema_l, 
                        units = units, position = position, leverage = leverage)
 
 
