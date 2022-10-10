@@ -210,8 +210,6 @@ class FuturesTrader():
 api_key = "f270c6eeacf3c02e9606cd20922086be607b740606871efd1b856d4aad2ed5b7"
 secret_key = "e543e0a4a93b013298d5e88a86bac37591a58767e3236580c3c93dd8bef2af09"
 
-#5FohU471stcrutn3p5GPZXtWtikeTxreNrgqdzhHsTUQA5xaOqaxgVsIboCcDuc5
-#btvBvWQvqHqyfO4X2RVQxQCXQWoO8NXMPdslxtX6Kwfbonqv141XzJPQrYcTjzZC
 
 # Futures API document:
 

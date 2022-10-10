@@ -21,8 +21,6 @@ plt.style.use("seaborn")
   
 # In[ ]:
     
-api_key = "5FohU471stcrutn3p5GPZXtWtikeTxreNrgqdzhHsTUQA5xaOqaxgVsIboCcDuc5"
-secret_key = "btvBvWQvqHqyfO4X2RVQxQCXQWoO8NXMPdslxtX6Kwfbonqv141XzJPQrYcTjzZC"
 client = Client(api_key = api_key, api_secret = secret_key, tld = "com", testnet = False)
 
 # In[ ]:
