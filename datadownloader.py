@@ -10,9 +10,7 @@ Created on Sat Aug  6 15:08:48 2022
 
 import pandas as pd
 from binance.client import Client
-import numpy as np
 import matplotlib.pyplot as plt
-from itertools import product
 import warnings
 warnings.filterwarnings("ignore")
 plt.style.use("seaborn")
@@ -21,6 +19,9 @@ plt.style.use("seaborn")
   
 # In[ ]:
     
+api_key = ""
+secret_key = ""
+
 client = Client(api_key = api_key, api_secret = secret_key, tld = "com", testnet = False)
 
 # In[ ]:
@@ -41,8 +42,8 @@ def get_history(symbol, interval, start, end = None):
     return df
 # In[ ]:
     
-df = get_history(symbol = "BTCUSDT", interval = "5m", start = "2022-10-03", end = "2022-10-04")
-df.to_csv(r'C:\Users\Kullanıcı\Documents\GitHub\AlgoTrading\btcusdt3oct.csv')
+df = get_history(symbol = "ETHUSDT", interval = "1h", start = "2022-01-01", end = "2022-11-18")
+df.to_csv(r'C:\Users\ATA\Desktop\Python\AlgoTrading\datasets\ETHUSDT1hr2022.csv')
 
 
 
