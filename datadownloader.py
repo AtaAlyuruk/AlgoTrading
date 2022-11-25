@@ -42,8 +42,8 @@ def get_history(symbol, interval, start, end = None):
     return df
 # In[ ]:
     
-df = get_history(symbol = "ETHUSDT", interval = "1h", start = "2022-01-01", end = "2022-11-18")
-df.to_csv(r'C:\Users\ATA\Desktop\Python\AlgoTrading\datasets\ETHUSDT1hr2022.csv')
+df = get_history(symbol = "BTCUSDT", interval = "1h", start = "2022-01-01", end = "2022-11-24")
+df.to_csv(r'C:\Users\ATA\Desktop\Python\AlgoTrading\BTCUSDT1hr2022.csv')
 
 
 

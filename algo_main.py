@@ -10,8 +10,8 @@ from Spot_Futures_Backtesting_EMA import Futures_Backtester as Futures_Backteste
 # LOAD THE CLASSES
  
 """
-ETH = Futures_Backtester(filepath="ETHUSDT1hr2022.csv", symbol="ETHUSDT", start="2022-11-06", end="2022-11-09", tc=-0.0005)
-BTC = Futures_Backtester(filepath="BTCUSDT1hr2022.csv", symbol="BTCUSDT", start="2022-10-01", end="2022-11-18", tc=-0.0005)
+ETH = Futures_Backtester(filepath="ETHUSDT1hr2022.csv", symbol="ETHUSDT", start="2022-10-24", end="2022-11-24", tc=-0.0005)
+BTC = Futures_Backtester(filepath="BTCUSDT1hr2022.csv", symbol="BTCUSDT", start="2022-10-01", end="2022-11-24", tc=-0.0005)
 
 # In[run backtest]:
 
