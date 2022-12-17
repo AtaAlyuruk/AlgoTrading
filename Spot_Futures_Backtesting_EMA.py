@@ -362,10 +362,10 @@ class Futures_Backtester():
         outperf =           round(strategy_multiple - bh_multiple, 6)
         ann_mean =          round(self.calculate_annualized_mean(to_analyze), 6)
         ann_std =           round(self.calculate_annualized_std(to_analyze), 6)
-        skew =              round(self.calculate_skewness(to_analyze), 6)
-        kurtosis =          round(self.calculate_kurtosis(to_analyze), 6)
+        #skew =              round(self.calculate_skewness(to_analyze), 6)
+        #kurtosis =          round(self.calculate_kurtosis(to_analyze), 6)
         sharpe =            round(self.calculate_sharpe(to_analyze), 6)
-        psr =               round(self.calculate_psr(to_analyze) , 6)
+        #psr =               round(self.calculate_psr(to_analyze) , 6)
        
         print(100 * "=")
         print("TRIPLE EMA STRATEGY | INSTRUMENT = {} | EMAs = {}".format(self.symbol, [self.EMA_S, self.EMA_M, self.EMA_L]))
@@ -379,10 +379,10 @@ class Futures_Backtester():
         print("\n")
         print("Annualized Mean:             {}".format(ann_mean))
         print("Annualized Std:              {}".format(ann_std))
-        print("Skewness:                    {}".format(skew))
-        print("Kurtosis:                    {}".format(kurtosis))
+        #print("Skewness:                    {}".format(skew))
+        #print("Kurtosis:                    {}".format(kurtosis))
         print("Sharpe Ratio:                {}".format(sharpe))
-        print("Probabilistic Sharpe Ratio:  {}".format(psr))
+        #print("Probabilistic Sharpe Ratio:  {}".format(psr))
         
         print(100 * "=")
         
