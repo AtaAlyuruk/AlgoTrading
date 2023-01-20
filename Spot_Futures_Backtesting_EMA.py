@@ -135,7 +135,40 @@ class Futures_Backtester():
         data["EMA_L"] = data.Close.ewm(span = EMAs[2], min_periods = EMAs[2]).mean()
         
         
-        ########################## Create Signal ###############################
+        ########################## Create Position ###############################
+        
+        """
+        position = 0
+        data["position"] = 0
+        for i in range(1, len(data["Close"])):
+            # Check if position is currently long
+            if position == 1:
+                # Check if 5 EMA crosses 13 EMA downwards and close price is higher than 50 EMA
+              if data["EMA_S"][i] < data["EMA_M"][i] and data["EMA_S"][i-1] >= data["EMA_M"][i-1] and data["Close"][i] > data["EMA_L"][i]:
+        # Close long position
+                position = 0
+                # Check if position is currently short
+            elif position == -1:
+                # Check if 5 EMA crosses 13 EMA upwards and close price is lower than 50 EMA
+              if data["EMA_S"][i] > data["EMA_M"][i] and data["EMA_S"][i-1] <= data["EMA_M"][i-1] and data["Close"][i] < data["EMA_L"][i]:
+        # Close short position
+                position = 0
+                # If position is 0, check for long or short trade
+            else:
+                # Check if 5 EMA crosses 13 EMA upwards and close price is higher than 50 EMA
+              if data["EMA_S"][i] > data["EMA_M"][i] and data["EMA_S"][i-1] <= data["EMA_M"][i-1] and data["Close"][i] > data["EMA_L"][i]:
+        # Open long position
+                position = 1
+                # Check if 5 EMA crosses 13 EMA downwards and close price is lower than 50 EMA
+              elif data["EMA_S"][i] < data["EMA_M"][i] and data["EMA_S"][i-1] >= data["EMA_M"][i-1] and data["Close"][i] < data["EMA_L"][i]:
+        # Open short position
+                position = -1
+
+            # Update positions list
+            data["position"][i] = position
+  
+        ######################### Create Position ############################
+        """
         data["EMA_Signal"] = 0
         signal = 0
         for i in range(len(data)):
@@ -165,8 +198,7 @@ class Futures_Backtester():
                     data["EMA_Signal"][i] = 0
             else:
                 data["EMA_Signal"][i] = 0
-  
-        ######################### Create Position ############################
+                
         data["position"] = 0
         
         for i in range(len(data["Close"])):
@@ -180,6 +212,7 @@ class Futures_Backtester():
                 data["position"][i] = 0
             else:
                 data["position"][i] = data["position"][i-1]
+        
         ######################################################################
         self.results = data
     
@@ -207,7 +240,9 @@ class Futures_Backtester():
             title = "{} | TC = {}".format(self.symbol, self.tc)
             self.results[["creturns", "cstrategy"]].plot(title=title, figsize=(12, 8))
             plt.show()
-
+            
+            
+            
     def plot_trades(self, period):
         if self.results is None:
             print("Run test_strategy() first.")
@@ -232,7 +267,7 @@ class Futures_Backtester():
                      color='b', markersize=12)
             plt.legend(loc=2)
             plt.show()
-
+            
 
             
     def optimize_strategy(self, EMA_S_range, EMA_M_range, EMA_L_range, metric = "Multiple"):
@@ -362,10 +397,10 @@ class Futures_Backtester():
         outperf =           round(strategy_multiple - bh_multiple, 6)
         ann_mean =          round(self.calculate_annualized_mean(to_analyze), 6)
         ann_std =           round(self.calculate_annualized_std(to_analyze), 6)
-        #skew =              round(self.calculate_skewness(to_analyze), 6)
-        #kurtosis =          round(self.calculate_kurtosis(to_analyze), 6)
+        skew =              round(self.calculate_skewness(to_analyze), 6)
+        kurtosis =          round(self.calculate_kurtosis(to_analyze), 6)
         sharpe =            round(self.calculate_sharpe(to_analyze), 6)
-        #psr =               round(self.calculate_psr(to_analyze) , 6)
+        psr =               round(self.calculate_psr(to_analyze) , 6)
        
         print(100 * "=")
         print("TRIPLE EMA STRATEGY | INSTRUMENT = {} | EMAs = {}".format(self.symbol, [self.EMA_S, self.EMA_M, self.EMA_L]))
@@ -379,10 +414,10 @@ class Futures_Backtester():
         print("\n")
         print("Annualized Mean:             {}".format(ann_mean))
         print("Annualized Std:              {}".format(ann_std))
-        #print("Skewness:                    {}".format(skew))
-        #print("Kurtosis:                    {}".format(kurtosis))
+        print("Skewness:                    {}".format(skew))
+        print("Kurtosis:                    {}".format(kurtosis))
         print("Sharpe Ratio:                {}".format(sharpe))
-        #print("Probabilistic Sharpe Ratio:  {}".format(psr))
+        print("Probabilistic Sharpe Ratio:  {}".format(psr))
         
         print(100 * "=")
         
